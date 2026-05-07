@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-white text-gray-900;
+}
+
+a {
+  @apply transition-colors duration-200;
+}
+
+button {
+  @apply transition-all duration-200;
+}
+
+/* 自定義樣式 */
+.card-hover {
+  @apply hover:shadow-lg hover:-translate-y-1 transition-all;
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 表格樣式 */
+table {
+  @apply w-full border-collapse;
+}
+
+th {
+  @apply bg-gray-100 p-3 text-left font-semibold text-gray-700 border-b-2 border-gray-200;
+}
+
+td {
+  @apply p-3 border-b border-gray-200;
+}
+
+tr:hover {
+  @apply bg-blue-50;
+}

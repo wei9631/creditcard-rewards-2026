@@ -1,0 +1,46 @@
+name: 自動爬蟲 - 每周更新信用卡數據
+
+on:
+  schedule:
+    # 每周一下午 2 點 (UTC+8) 運行
+    - cron: '0 6 * * 1'
+  
+  # 允許手動觸發
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 檢出代碼
+        uses: actions/checkout@v3
+      
+      - name: 設置 Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: 安裝依賴
+        run: npm install
+      
+      - name: 運行爬蟲
+        run: node scripts/scraper.js
+      
+      - name: 提交更新
+        run: |
+          git config user.name "Scraper Bot"
+          git config user.email "bot@example.com"
+          git add src/pages/api/cards.js data/creditcards.json logs/scraper.log || true
+          git commit -m "🤖 自動更新信用卡數據 - $(date +'%Y-%m-%d %H:%M:%S')" || true
+          git push origin main
+      
+      - name: 同步到 Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          if [ ! -z "$VERCEL_TOKEN" ]; then
+            npm install -g vercel
+            vercel --token $VERCEL_TOKEN --prod || true
+          fi
